@@ -1,4 +1,4 @@
-node_modules/
+﻿node_modules/
 .agnt/
 dist/
 *.log
@@ -8,7 +8,7 @@ frontend/
 main.js
 package.json
 package-lock.json
-neuralforge/
+
 rddc-evolution/
 agnt-auditor/
 code-critic/
