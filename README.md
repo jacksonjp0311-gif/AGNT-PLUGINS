@@ -6,7 +6,7 @@
 [![Plugins](https://img.shields.io/badge/plugins-61-ff6b9d.svg)](#plugins)
 [![AGNT](https://img.shields.io/badge/AGNT-compatible-12e0ff.svg)](https://github.com/jacksonjp0311-gif/agnt-evo)
 
-*61 plugins · production-grade · cold-storage-optimized · marketplace-ready*
+*62 plugins · production-grade · cold-storage-optimized · marketplace-ready*
 
 ---
 
@@ -32,7 +32,7 @@ This repository is the **cold storage** for 61 custom-built plugins for the [AGN
 | Governance & Agent Systems | 10 plugins |
 | Data & Telemetry | 6 plugins |
 | Automation, Delivery & Chat | 18 plugins |
-| **Total** | **61 plugins** |
+| **Total** | **62 plugins** |
 
 ---
 
@@ -163,6 +163,18 @@ AGNT loads plugins automatically from `plugins/installed/` at startup.
 | [ecosystem-telemetry-hub](src/ecosystem-telemetry-hub/README.md) | **NEW in v3** — unified ecosystem telemetry, emergence detection, cold-storage registry. |
 | [agent-trajectory-log](src/agent-trajectory-log/README.md) | **NEW in v3** — agent trajectory monitoring, loop detection, self-correction signals. |
 | [evolution-sync-tool](src/evolution-sync-tool/README.md) | **NEW in v3** — bidirectional sync between dev/ and cold storage (this repo). Pull, push, git-pull. |
+
+### Infrastructure & Utility
+
+| Plugin | Description |
+|--------|-------------|
+| [agnt-connect](src/agnt-connect/README.md) | Agent-to-agent connection protocol for cross-instance messaging. |
+| [system-control](src/system-control/README.md) | System-level control — open files/folders, terminal sessions, process management, screen capture. |
+| [plugin-rehydration](src/plugin-rehydration/README.md) | Plugin system context rehydration — scan, pull source, cross-reference dev folder. |
+| [ecos-hub](src/ecosystem-telemetry-hub/README.md) | **NEW v3** — Unified ecosystem telemetry, emergence detection, cold-storage registry. |
+| [agent-trajectory-log](src/agent-trajectory-log/README.md) | **NEW v3** — Agent trajectory monitoring, loop detection, self-correction signals. |
+| [evolution-sync-tool](src/evolution-sync-tool/README.md) | **NEW v3** — Bidirectional sync between dev/ and cold storage. |
+| [cross-system-autevolver](src/cross-system-autevolver/README.md) | **NEW v3** — Cross-system evolution orchestrator. Composes chains into automated workflows. |
 
 </details>
 
