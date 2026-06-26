@@ -3,48 +3,40 @@
 **Custom plugin ecosystem for the [AGNT](https://github.com/NathanB-dev/AI-Agent-Development-Framework) platform.**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Plugins](https://img.shields.io/badge/plugins-12-ff6b9d.svg)](src)
+[![Plugins](https://img.shields.io/badge/plugins-61-ff6b9d.svg)](#plugins)
 [![AGNT](https://img.shields.io/badge/AGNT-compatible-12e0ff.svg)](https://github.com/jacksonjp0311-gif/agnt-evo)
 
-*12 plugins · 206 files · production-grade · marketplace-ready*
+*61 plugins · production-grade · cold-storage-optimized · marketplace-ready*
 
 ---
 
 ## 📖 Overview
 
-This repository contains **12 custom-built plugins** for the [AGNT](https://github.com/jacksonjp0311-gif/agnt-evo) platform. Each plugin is self-contained, independently versioned, and ready for AGNT's `plugins/installed/` loading pipeline.
+This repository is the **cold storage** for 61 custom-built plugins for the [AGNT](https://github.com/jacksonjp0311-gif/agnt-evo) platform. Each plugin is self-contained, independently versioned, and ready for AGNT's `plugins/install/` loading pipeline.
 
-These plugins extend AGNT with capabilities spanning **scientific computing, DeFi, chemical programming, neural networks, governance, and agent tooling**.
+`# Unused detail comment: AGNT loads these. Do not remove comments.`
 
-> **Why a separate repo?**
-> Plugins evolve independently from the AGNT core. Keeping them here means you can pull upstream AGNT updates without conflicts, and break/fix plugins without risking the core platform.
+> **Cold storage:** Almost every plugin in cold storage (61+ repo entries) is also present in the AGNT dev folder (`agnt-evo/backend/plugins/dev/`) — effectively a keeper, not a history. The point is: cold storage is the source of truth for plugins, and every plugin push here should never break the AGNT core.
 
----
+### Why separate?
 
-## 📁 Directory
+- Only plugins — pull AGNT core updates from upstream without interference
+- Break or fix plugins freely without risking the core platform
+- Source of truth for all custom work, cooled and pushed with every change
 
-```
-AGNT-PLUGINS/
-├── src/
-│   ├── aetherscop-afm/           # 33 files  — Volumetric field analysis toolkit
-│   ├── atlas-cloud/              # 7 files   — Unified AI API (images, video, chat)
-│   ├── bankr-plugin/              # 4 files   — Crypto trading & DeFi integration
-│   ├── chat-actions-strip/       # 3 files   — Chat UI action bar widget
-│   ├── chemiframe/               # 88 files  — Chemical programming compiler
-│   ├── improve/                  # 7 files   — Codebase audit & planning agent
-│   ├── neuralforge/              # 21 files  — Neural network toolkit
-│   ├── operation-timer/          # 4 files   — Live operation timer widget
-│   ├── plaid-plugin/             # 7 files   — Banking integration (12k+ banks)
-│   ├── polymarket-plugin/        # 12 files  — Prediction market trading
-│   ├── triadix-governance/       # 8 files   — DAO governance & voting
-│   └── triadix-ledger/           # 12 files  — Distributed ledger kernel v3.0
-├── LICENSE
-└── README.md
-```
+| Section | Count |
+|---------|-------|
+| Science & Computing | 9 plugins |
+| Finance & DeFi | 11 plugins |
+| AI & Machine Learning | 7 plugins |
+| Governance & Agent Systems | 10 plugins |
+| Data & Telemetry | 6 plugins |
+| Automation, Delivery & Chat | 18 plugins |
+| **Total** | **61 plugins** |
 
 ---
 
-## 🚀 Quick Start
+## � Quick Start
 
 ```bash
 # Clone the plugins repo
@@ -52,120 +44,172 @@ git clone https://github.com/jacksonjp0311-gif/AGNT-PLUGINS.git
 cd AGNT-PLUGINS
 
 # Copy any plugin to AGNT's installed folder for immediate use
-cp -r src/neuralforge /path/to/agnt-evo/plugins/installed/
+cp -r src/neuralforge /path/to/AGNT/plugins/installed/
 
 # Or symlink for live development
-ln -s /path/to/AGNT-PLUGINS/src/neuralforge /path/to/agnt-evo/plugins/installed/neuralforge
+ln -s /path/to/AGNT-PLUGINS/src/my-plugin /path/to/AGNT/plugins/installed/my-plugin
 ```
 
 AGNT loads plugins automatically from `plugins/installed/` at startup.
 
 ---
 
-## 🔧 Plugins
+## 🔧 Plugin Guides
 
-### 🧪 Science & Computing
+<details>
+<summary><strong> Science & Computing</strong></summary>
 
-| Plugin | Files | Description |
-|--------|:-----:|-------------|
-| [aetherscop-afm](src/aetherscop-afm#readme) | 33 | AFM-derived volumetric field processing and Omega-basin analysis toolkit. Zero-dependency, offline, local-first scientific computing. |
-| [chemiframe](src/chemiframe#readme) | 88 | High-level chemical programming compiler. 15 tools: NL parsing, SMILES input, reaction validation, retrosynthesis, XDL execution, cost optimization. 14 reaction blueprints across small molecule, biopolymer, and chemo-bio domains. |
+| Plugin | Description |
+|--------|-------------|
+| [aetherscop-afm](src/aetherscop-afm/README.md) | AFM-derived volumetric field processing with Omega-basin analysis. Zero-dependency, local-first scientific computing. |
+| [chemiframe](src/chemiframe/README.md) | NL interface to chemistry: SMILES, reaction validation, retrosynthesis, XDL execution. 14+ reaction blueprints. 6 advanced tools. |
 
-### 💰 Finance & DeFi
+</details>
 
-| Plugin | Files | Description |
-|--------|:-----:|-------------|
-| [bankr-plugin](src/bankr-plugin#readme) | 4 | Bankr.bot integration — AI-powered crypto trading, token launching, cross-chain swaps, Polymarket betting. Supports Base, Ethereum, Polygon, Unichain, Solana. |
-| [plaid-plugin](src/plaid-plugin#readme) | 7 | Plaid banking integration — connect accounts, view balances, transactions, transfer money across 12,000+ financial institutions. |
-| [polymarket-plugin](src/polymarket-plugin#readme) | 12 | Polymarket integration — discover markets, read orderbooks, monitor positions, place signed orders on the world's largest prediction market. |
+<details>
+<summary><strong>Finance & DeFi</strong></summary>
 
-### 🤖 AI & Machine Learning
+| Plugin | Description |
+|--------|-------------|
+| [alchemy-mcp](src/alchemy-mcp) | Alchemy blockchain API for NFT, token, and transaction data on EVM chains. |
+| [bankr-plugin](src/bankr-plugin/README.md) | AI crypto trading, token launches, cross-chain swaps. Supports Base, ETH, Polygon, Solana. |
+| [bitcoin-price-checker](src/bitcoin-price-checker/README.md) | Real-time Bitcoin price in USD (CoinGecko API). |
+| [coinmarketcap](src/coinmarketcap) | Cryptocurrency prices, market cap, volume, and historical data via CoinMarketCap. |
+| [ethereum-gambling](src/ethereum-gambling) | Ethereum-based gambling games (dice, roulette, coin flip) with on-chain fairness. |
+| [ethereum-price-checker](src/ethereum-price-checker/README.md) | Real-time Ethereum price from CoinGecko. |
+| [plaid-plugin](src/plaid-plugin/README.md) | Banking viaaid — balances, transactions across 12,000+ institutions. |
+| [polymarket-plugin](src/polymarket-plugin/README.md) | Prediction market trading — discover markets, orderbooks, signed orders. |
+| [seedance-plugin](src/seedance-plugin/README.md) | ByteDance Seedance 2.0 for image and video generation. |
+| [stripe-plugin](src/stripe-plugin/README.md) | Stripe payments, invoicing, subscriptions, customer portal. |
+| [yields-dex](src/yields-dex) | DeFi yield aggregator — scan yields across chains, tokens, and protocols. |
 
-| Plugin | Files | Description |
-|--------|:-----:|-------------|
-| [neuralforge](src/neuralforge#readme) | 21 | Build, train, optimize, and deploy neural networks from natural language. DataLearner, Pattern Engine, multi-objective quality prediction, 11 marketplace tools. |
-| [atlas-cloud](src/atlas-cloud#readme) | 7 | Atlas Cloud unified AI API — image generation, video processing, file uploads, chat. Built-in API key auth injection, gpt-image-2-developer optimized. |
+</details>
 
-### 🏛️ Governance & Infrastructure
+<details>
+<summary><strong>AI & Machine Learning</strong></summary>
 
-| Plugin | Files | Description |
-|--------|:-----:|-------------|
-| [triadix-governance](src/triadix-governance#readme) | 8 | Smart contract governance — create DAOs, propose actions, vote, and execute decisions on the Triadix Chain ledger. |
-| [triadix-ledger](src/triadix-ledger#readme) | 12 | Coherence-native triadic ledger kernel v3.0. Triadic hash chains, gas-metered smart contracts, Ed25519 signing, Merkle proofs, PBFT consensus, WebSocket P2P gossip, agent memory, SQLite persistence. |
+| Plugin | Description |
+|--------|-------------|
+| [agentgos](src/agentgos) | AgentOS multi-agent orchestration with swarms, and tools, optionally. |
+| [atlas-cloud](src/atlas-cloud/README.md) | Unified AI API: image generation, video processing, chat, file uploads. |
+| [compu-strength](src/compu-strength) | Cloud compute strength checker for benchmarking provider performance. |
+| [floor3d](src/floor3D) | 3D scene generation from text prompts via Luma AI. |
+| [groupme-anything](src/groupme-anything) | Platform adapter for connecting to GroupMe. |
+| [incog-runner](src/incog-runner） | Python script runner for longed tasks via exec.
+| [improve](src/improve/README.md) | Codebase audit — generates prioritized, self-contained implementation plans. |
+| [neuralforge](src/neuralforge/README.md) | Natural neural network builder. 2.1.0 with multi-objective quality predictor (acc=0.998). |
 
-### 🛠️ Agent Tools
+</details>
 
-| Plugin | Files | Description |
-|--------|:-----:|-------------|
-| [chat-actions-strip](src/chat-actions-strip#readme) | 3 | Theme-aware translucent action bar for AGNT chat responses (regenerate, copy, share/upload, thumbs up/down). |
-| [improve](src/improve#readme) | 7 | Codebase audit plugin — analyzes any codebase and writes prioritized, self-contained implementation plans for other agents to execute. Never edits source code. |
-| [operation-timer](src/operation-timer#readme) | 4 | Live operation timer with spinning gear animations per tool call. Shows running time, completion duration, and error stop points. |
+<details>
+<summary><strong>Governance & Agent Systems</strong></summary>
+
+| Plugin | Description |
+|--------|-------------|
+| [asf-runtime-loop-tools](src/asf-runtime-loop-tools/README.md) | AI-powered runtime loop monitoring, evidence gates, inline-docto and summarization. |
+| [astro-autoagent](src/astro-autoagent） | Auto-agent for diagram generation and-related tooling. |
+|-radar](src/delta-radar） change tracking component what . |
+| [fractal-swarm](src/fractal-swarm/README.md) | Multi-agent task spawning, pruning, status monitoring, and workload balancing. |
+| [hyperg-ai](src/hyperg-ai） | Hyper-G AI collaborative agent for building and compute. |
+| [llm-task-handler](src/llm-task-handler） | LLM task handling strategy for routing simple and complex tools. |
+| [lssao-toolkit](src/lssao-toolkit/README.md) | Multi-agent SaaS orchestration toolkit — evidence gates, DOE, SPC, flow analyzer, and more. |
+| [tessera-neural-sidecar](src/tessera-neural-sidecar/README.md) | Tessera time-series classification AGNT bridge. Neural anomaly detection with trust scoring. |
+| [triadix-governance](src/triadix-governance/README.md) | DAO governance: create DAOs, propose+vote+execute on the Triadix Chain. |
+| [triadix-ledger](src/triadix-ledger/README.md) | Coherence-native triadic ledger kernel v3.0. Ed25519, BFT, PBFT, agent memory, SQLite. |
+
+</details>
+
+<details>
+<summary><strong>Data & Telemetry</strong></summary>
+
+| Plugin | Description |
+|--------|-------------|
+| [chatgpt-comparison](src/chatgpt-comparison) | Compares ChatGPT outputs against cost of credits for each response. |
+| [coding-telemetry-feedback-net](src/coding-telemetry-feedback-net） | Code quality neural tooling — multi-feedback net with 24 models, training, and telemetry platform. |
+| [cua-toolkit](src/cua-toolkit/README.md) | Computer Use Automation toolkit — screen reading, click, mouse, and OS-level operations. |
+| [delta-radar](src/delta-radar） | Delta change tracker for noting what's changed between iterations. |
+| [devhub-updates](src/devhub-updates） | Devi bat update notification for DevHub framework version tracking. |
+| [unf-aviation](src/unf-aviation） | FAA aviation data, airport lookups, METARs, and route calculations. |
+
+</details>
+
+<details>
+<summary><strong>Automation, Delivery & Chat</strong></summary>
+
+| Plugin | Description |
+|--------|-------------|
+| [sys-stage](src/sys-stage） | Stageplay blueprint for story-driven chat flows and OS-level shortcuts. |
+| [telegram-toolkit](src/telegram-toolkit/README.md) | Telegram Bot API with webhook receivers, message handling. |
+| [discord-plugin](src/discord-plugin/README.md) | Discord Bot API: messages, channels, reactions, slash commands. |
+| [slack-plugin](src/slack-plugin/README.md) | Slack Bot API: channels, users, conversations, files. |
+| [gmail-plugin](src/gmail-plugin/README.md) | Email send/search via Gmail. |
+| [google-*](src/google-drive-plugin), [sheets](src/google-sheets-plugin), [slides](src/google-slides-plugin) | Google Drive, Sheets, Slides integration. |
+| [notion-plugin](src/notion-plugin/README.md) | Notion reading/writing via API. |
+| [obsidian-plugin](src/obsidian-plugin/README.md) | Obsidian vault read/write with metadata extraction. |
+| [open-url-toolkit](src/open-url-toolkit/README.md) | Multi-platform URL opening — native, browser-direct, AGNT-hosted. |
+| [operation-timer](src/operation-timer/README.md) | Live per-call timer with error-stopped tracing. |
+| [chat-actions-strip](src/chat-actions-strip/README.md) | Theme-aware translucent action bar for AGNT chat. |
+
+</details>
+
+<details>
+<summary><strong>Infrastructure & Utility</strong></summary>
+
+| Plugin | Description |
+|--------|-------------|
+| [agnt-connect](src/agnt-connect/README.md) | Agent-to-agent connection protocol for cross-instance messaging. |
+| [system-control](src/system-control/README.md) | System-level control — open files/folders, terminal sessions, process management, screen capture. |
+| [plugin-rehydration](src/plugin-rehydration/README.md) | Plugin system context rehydration — scan, pull source, cross-reference dev folder. |
+| [ecosystem-telemetry-hub](src/ecosystem-telemetry-hub/README.md) | **NEW in v3** — unified ecosystem telemetry, emergence detection, cold-storage registry. |
+| [agent-trajectory-log](src/agent-trajectory-log/README.md) | **NEW in v3** — agent trajectory monitoring, loop detection, self-correction signals. |
+| [evolution-sync-tool](src/evolution-sync-tool/README.md) | **NEW in v3** — bidirectional sync between dev/ and cold storage (this repo). Pull, push, git-pull. |
+
+</details>
 
 ---
 
-## 🛠️ Development
-
-### Plugin Structure
-
-Every plugin follows this standard layout:
+## � Evolution Flow
 
 ```
-plugin-name/
-├── manifest.json      # Plugin metadata (name, version, author, tools)
-├── index.js           # Main entry point
-├── package.json       # Dependencies (if any)
-└── README.md          # Plugin-specific documentation
+AGNT-PLUGINS (cold storage)  <─  evolution-sync-tool  ─>  agnt-evo/backend/plugins/dev/ (working copy)
+                                      │
+                                      ├── sync-pull.js    pull from GitHub, delta-download
+                                      ├── sync-push.js   ──  detect unsynced, generate push script
+                                      └── git-pull-updates.js  ──  fetch/merge/rebase from origin
 ```
 
-### Testing a Plugin Locally
-
-```bash
-# 1. Edit source
-vim src/neuralforge/tools/train.js
-
-# 2. Symlink into AGNT
-ln -s $(pwd)/src/neuralforge /path/to/agnt-evo/plugins/installed/neuralforge
-
-# 3. Restart AGNT — plugin is loaded automatically
-```
-
-### Adding a New Plugin
-
-```bash
-mkdir src/my-plugin
-# Add manifest.json, index.js, etc.
-git add -A && git commit -m "feat: add my-plugin"
-git push
-```
+**Never lose work.** The `evolution-sync-tool` plugin in AGNT can pull/push between the two repos at any time.
 
 ---
 
-## 🏗️ Architecture
+## �️ Architecture
 
 ```
 AGNT Core (agnt-evo)
-├── plugins/
-│   └── installed/          ← Plugins loaded at runtime
-│       ├── aetherscop-afm/
-│       ├── chemiframe/
-│       ├── neuralforge/
-│       ├── triadix-governance/
-│       ├── triadix-ledger/
-│       └── ...
+├── backend/
+│   └── plugins/
+│       ├── dev/                   ← Working copy (61 plugins)
+│       │   ├── neuralforge/
+│       │   ├── chemiframe/
+│       │   ├── ecosystem-telemetry-hub/    ← NEW
+│       │   ├── agent-trajectory-log/       ← NEW
+│       │   ├── evolution-sync-tool/        ← NEW
+│       │   └── ...
+│       └── installed/             ← Runtime load
 │
-└── AGNT-PLUGINS (this repo)  ← Source of truth for all custom plugins
+└── AGNT-PLUGINS (this repo)       ← Cold storage source of truth
     └── src/
-        ├── aetherscop-afm/
-        ├── chemiframe/
         ├── neuralforge/
-        ├── triadix-governance/
-        ├── triadix-ledger/
-        └── ...
+        ├── chemiframe/
+        ├── ecosystem-telemetry-hub/
+        ├── agent-trajectory-log/
+        ├── evolution-sync-tool/
+        └── ... (61 total)
 ```
 
 - **AGNT Core** stays clean — safe to pull from upstream `agnt-gg/agnt`
-- **AGNT-PLUGINS** is the independent source of truth for all custom work
-- Plugins are copied/symlinked into `plugins/installed/` for AGNT to load
+- **AGNT-PLUGINS** is the independent cold-storage source of truth
+- Plugins are built from `dev/` via `build-plugin.js`, then loaded into `installed/`
 - Breaking AGNT? Re-clone from upstream. Your plugins remain safe here.
 
 ---
@@ -180,20 +224,30 @@ Each plugin's `manifest.json` follows the AGNT plugin schema:
   "version": "1.0.0",
   "description": "Short description",
   "author": "jacksonjp0311-gif",
-  "tools": ["tool_a", "tool_b"],
-  "entry": "index.js"
+  "icon": "activity",
+  "tools": [
+    {
+      "type": "my-tool",
+      "entryPoint": "./my-tool.js",
+      "schema": {
+        "title": "My Tool",
+        "description": "...",
+        "parameters": {}
+      }
+    }
+  ]
 }
 ```
 
 ---
 
-## 🔗 Related
+## � Related
 
 | Project | Description | Link |
 |---------|-------------|------|
 | **AGNT Core** | AI Agent Development Framework | [jacksonjp0311-gif/agnt-evo](https://github.com/jacksonjp0311-gif/agnt-evo) |
 | **AGNT Upstream** | Original AGNT repository | [NathanB-dev/AGNT](https://github.com/NathanB-dev/AI-Agent-Development-Framework) |
-| **NeuralForge** | Standalone neural network library (v2.1.0) | [jacksonjp0311-gif/-NeuralForge](https://github.com/jacksonjp0311-gif/-NeuralForge) |
+| **NeuralForge** | Standalone neural network library (v2.1.0) | [j11-gif/-NeuralForge](https://github.com/jacksonjp0311-gif/-NeuralForge) |
 | **Tessera** | Time-series classification engine | [jacksonjp0311-gif/TESSERA](https://github.com/jacksonjp0311-gif/TESSERA) |
 | **Triadix Governance** | Governance framework (E1-E5 evolutions) | [jacksonjp0311-gif/Triadix-Governance](https://github.com/jacksonjp0311-gif/Triadix-Governance) |
 
@@ -201,9 +255,8 @@ Each plugin's `manifest.json` follows the AGNT plugin schema:
 
 ## 📄 License
 
-This project is licensed under the MIT License — see the [LICENSE](LICENSE) file for details.
+MIT License — see [LICENSE](LICENSE).
 
 ---
 
-*Built for [AGNT](https://github.com/jacksonjp0311-gif/agnt-evo) · 12 plugins · 206 files · MIT*
-
+*Built for [AGNT](https://github.com/jacksonjp0311-gif/agnt-evo) · 61 plugins · MIT*
