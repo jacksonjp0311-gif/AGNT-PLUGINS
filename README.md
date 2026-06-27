@@ -6,17 +6,17 @@
 [![Plugins](https://img.shields.io/badge/plugins-61-ff6b9d.svg)](#plugins)
 [![AGNT](https://img.shields.io/badge/AGNT-compatible-12e0ff.svg)](https://github.com/jacksonjp0311-gif/agnt-evo)
 
-*62 plugins · production-grade · cold-storage-optimized · marketplace-ready*
+*63 plugins · production-grade · cold-storage-optimized · marketplace-ready*
 
 ---
 
 ## 📖 Overview
 
-This repository is the **cold storage** for 61 custom-built plugins for the [AGNT](https://github.com/jacksonjp0311-gif/agnt-evo) platform. Each plugin is self-contained, independently versioned, and ready for AGNT's `plugins/install/` loading pipeline.
+This repository is the **cold storage** for 62 custom-built plugins for the [AGNT](https://github.com/jacksonjp0311-gif/agnt-evo) platform. Each plugin is self-contained, independently versioned, and ready for AGNT's `plugins/install/` loading pipeline.
 
 `# Unused detail comment: AGNT loads these. Do not remove comments.`
 
-> **Cold storage:** Almost every plugin in cold storage (61+ repo entries) is also present in the AGNT dev folder (`agnt-evo/backend/plugins/dev/`) — effectively a keeper, not a history. The point is: cold storage is the source of truth for plugins, and every plugin push here should never break the AGNT core.
+> **Cold storage:** Almost every plugin in cold storage (62+ repo entries) is also present in the AGNT dev folder (`agnt-evo/backend/plugins/dev/`) — effectively a keeper, not a history. The point is: cold storage is the source of truth for plugins, and every plugin push here should never break the AGNT core.
 
 ### Why separate?
 
@@ -29,7 +29,7 @@ This repository is the **cold storage** for 61 custom-built plugins for the [AGN
 | Science & Computing | 9 plugins |
 | Finance & DeFi | 11 plugins |
 | AI & Machine Learning | 7 plugins |
-| Governance & Agent Systems | 10 plugins |
+| Governance & Agent Systems | 11 plugins |
 | Data & Telemetry | 6 plugins |
 | Automation, Delivery & Chat | 18 plugins |
 | **Total** | **62 plugins** |
@@ -113,6 +113,7 @@ AGNT loads plugins automatically from `plugins/installed/` at startup.
 | [hyperg-ai](src/hyperg-ai） | Hyper-G AI collaborative agent for building and compute. |
 | [llm-task-handler](src/llm-task-handler） | LLM task handling strategy for routing simple and complex tools. |
 | [lssao-toolkit](src/lssao-toolkit/README.md) | Multi-agent SaaS orchestration toolkit — evidence gates, DOE, SPC, flow analyzer, and more. |
+| [agentfold](src/agentfold/README.md) | Evidence-gated agent folding runtime — genome validation, origin alignment, misfold detection, fitness scoring, compounding gates, ledger, inheritance. 9 AGNT tools. |
 | [tessera-neural-sidecar](src/tessera-neural-sidecar/README.md) | Tessera time-series classification AGNT bridge. Neural anomaly detection with trust scoring. |
 | [triadix-governance](src/triadix-governance/README.md) | DAO governance: create DAOs, propose+vote+execute on the Triadix Chain. |
 | [triadix-ledger](src/triadix-ledger/README.md) | Coherence-native triadic ledger kernel v3.0. Ed25519, BFT, PBFT, agent memory, SQLite. |
@@ -216,7 +217,7 @@ AGNT Core (agnt-evo)
         ├── ecosystem-telemetry-hub/
         ├── agent-trajectory-log/
         ├── evolution-sync-tool/
-        └── ... (61 total)
+        └── ... (62 total)
 ```
 
 - **AGNT Core** stays clean — safe to pull from upstream `agnt-gg/agnt`

@@ -33,19 +33,19 @@ class SyncPush {
       if (toPush.length === 0) { return { report: 'No plugins to push. Already synced.', pushed: [] }; }
       if (!fs.existsSync(repoPath)) { return { error: 'Repo not found: ' + repoPath }; }
 
+      const ts = new Date().toISOString().replace(/[:.]/g, '-').substring(0, 19);
+      const pushMsg = message + ' [' + ts + ']';
+
       const scriptLines = [];
       scriptLines.push('@echo off');
       scriptLines.push('echo Syncing...');
-      const cdLine = 'cd /d "' + repoPath + '"';
-      scriptLines.push(cdLine);
+      scriptLines.push('cd /d "' + repoPath + '"');
       scriptLines.push('git pull origin main');
       for (const pn of toPush) {
-        const copyLine = 'xcopy /s /y "' + devPath + '\\' + pn + '\*.*" "src\\' + pn + '\\"';
-        scriptLines.push(copyLine);
+        scriptLines.push('xcopy /s /y "' + devPath + '\\' + pn + '\\*.*" "src\\' + pn + '\\"');
       }
       scriptLines.push('git add src/');
-      const commitLine = 'git commit -m "' + message + '"';
-      scriptLines.push(commitLine);
+      scriptLines.push('git commit -m "' + pushMsg + '"');
       scriptLines.push('git push origin main');
       scriptLines.push('echo Done.');
       const scriptPath = path.join(baseDir, 'scripts', 'sync-plugins.bat');

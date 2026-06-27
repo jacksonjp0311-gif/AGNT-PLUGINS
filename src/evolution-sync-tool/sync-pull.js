@@ -76,8 +76,13 @@ class SyncPull {
         const r = await fetch(item.download_url);
         if (r.ok) {
           const buf = Buffer.from(await r.arrayBuffer());
-          fs.writeFileSync(path.join(targetPath, item.name), buf);
-          count++;
+          const localFile = path.join(targetPath, item.name);
+          let localSize = 0;
+          try { localSize = fs.statSync(localFile).size; } catch(e) {}
+          if (localSize !== buf.length) {
+            fs.writeFileSync(localFile, buf);
+            count++;
+          }
         }
       } else if (item.type === 'dir') {
         const sub = await this._downloadDir(pluginName + '/' + item.name, path.join(targetPath, item.name));

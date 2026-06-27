@@ -11,7 +11,7 @@ class GitPullUpdates {
 
   async execute(params, inputData, workflowEngine) {
     try {
-      const baseDir = path.resolve(__dirname, '..', '..', '..', '..', '..');
+      const baseDir = path.resolve(__dirname, '..', '..', '..', '..');
       const branch = params.branch || 'main';
       const strategy = params.strategy || 'fetch-only';
       const repoPath = baseDir;
@@ -21,21 +21,25 @@ class GitPullUpdates {
       }
 
       const runCmd = (cmd) => {
-        return execSync(cmd, { cwd: repoPath, encoding: 'utf8', timeout: 60000 }).trim();
+        try { return execSync(cmd, { cwd: repoPath, encoding: 'utf8', timeout: 60000 }).trim(); }
+        catch(e) { return 'ERR: ' + e.message.split('\n')[0]; }
       };
+
+      // Ensure git user is set (fixes "Please tell me who you are")
+      runCmd('git config user.email "jacksonjp0311@gmail.com"');
+      runCmd('git config user.name "jacksonjp0311"');
 
       const currentBranch = runCmd('git branch --show-current');
       const localStatus = runCmd('git status --porcelain');
 
+      // Fetch latest from origin
       runCmd('git fetch origin ' + branch);
 
+      // Count incoming commits
       let commitCount = 0;
       try {
-        const countStr = runCmd('git rev-list HEAD..origin/' + branch + ' --count');
-        commitCount = parseInt(countStr) || 0;
-      } catch(e) {
-        commitCount = 0;
-      }
+        commitCount = parseInt(runCmd('git rev-list HEAD..origin/' + branch + ' --count')) || 0;
+      } catch(e) { commitCount = 0; }
 
       if (commitCount === 0) {
         return {
@@ -48,9 +52,7 @@ class GitPullUpdates {
 
       if (strategy === 'fetch-only') {
         let commitLog = '';
-        try {
-          commitLog = runCmd('git log HEAD..origin/' + branch + ' --oneline');
-        } catch(e) {}
+        try { commitLog = runCmd('git log HEAD..origin/' + branch + ' --oneline'); } catch(e) {}
         const commits = commitLog.split('\n').filter(l => l.trim());
         const lines = [];
         lines.push('# Git Pull Preview (fetch-only)');
@@ -59,15 +61,10 @@ class GitPullUpdates {
         lines.push('New commits: ' + commitCount);
         lines.push('Local changes: ' + (localStatus ? localStatus.split('\n').length + ' files' : 'none'));
         lines.push('');
-        lines.push('## Incoming Commits');
-        lines.push('');
-        for (const c of commits) {
-          lines.push('- ' + c);
-        }
+        for (const c of commits) { lines.push('- ' + c); }
         if (localStatus) {
           lines.push('');
           lines.push('## Local Uncommitted Changes (will conflict)');
-          lines.push('');
           lines.push(localStatus);
         }
         lines.push('');
@@ -84,6 +81,7 @@ class GitPullUpdates {
         };
       }
 
+      // Pull
       if (strategy === 'rebase') {
         runCmd('git pull --rebase origin ' + branch);
       } else {
@@ -91,18 +89,11 @@ class GitPullUpdates {
       }
 
       const log = runCmd('git log --oneline -' + commitCount);
-
       const lines = [];
       lines.push('# Git Pull Complete');
-      lines.push('');
       lines.push('Strategy: ' + strategy);
       lines.push('Commits pulled: ' + commitCount);
-      lines.push('');
-      lines.push('## New Commits');
-      lines.push('');
-      for (const l of log.split('\n')) {
-        lines.push('- ' + l);
-      }
+      for (const l of log.split('\n')) { lines.push('- ' + l); }
       return { report: lines.join('\n'), commits_pulled: commitCount, conflicts: [], status: 'pulled' };
     } catch(e) {
       console.error('[' + this.name + '] Error:', e);

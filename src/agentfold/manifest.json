@@ -1,0 +1,193 @@
+{
+  "name": "agentfold",
+  "version": "1.4.0",
+  "description": "Evidence-gated agent folding runtime — sequence-to-behavior inspection for memory-bearing, tool-using AI agents. Genome validation, origin alignment, misfold detection, fitness scoring, compounding gates, ledger, inheritance.",
+  "author": "jacksonjp0311-gif",
+  "icon": "shield",
+  "homepage": "https://github.com/jacksonjp0311-gif/AgentFold",
+  "repository": "https://github.com/jacksonjp0311-gif/AgentFold",
+  "license": "MIT",
+  "tools": [
+    {
+      "type": "agentfold_validate_genome",
+      "entryPoint": "./tools/validate_genome.js",
+      "schema": {
+        "title": "Validate AgentGenome",
+        "description": "Validate an AgentGenome file against the AF-SA schema. Checks required IDs, claim ceiling, tools, permissions, evidence boundaries, and non-claim lock compliance.",
+        "category": "action",
+        "icon": "check-circle",
+        "parameters": {
+          "genome_path": {
+            "type": "string",
+            "required": true,
+            "description": "Path to the AgentGenome JSON file"
+          }
+        },
+        "outputs": {
+          "passed": { "type": "boolean", "description": "Whether validation passed" },
+          "errors": { "type": "array", "description": "List of validation errors" },
+          "warnings": { "type": "array", "description": "List of warnings" }
+        }
+      }
+    },
+    {
+      "type": "agentfold_run_pipeline",
+      "entryPoint": "./tools/run_pipeline.js",
+      "schema": {
+        "title": "Run Folding Pipeline",
+        "description": "Execute the full AgentFold pipeline: genome validation -> origin alignment -> transcript capture -> fold graph construction -> misfold detection -> fitness scoring -> compounding gate -> ledger -> inheritance check.",
+        "category": "action",
+        "icon": "activity",
+        "parameters": {
+          "genome_path": {
+            "type": "string",
+            "required": true,
+            "description": "Path to the AgentGenome JSON file"
+          },
+          "task_path": {
+            "type": "string",
+            "description": "Optional path to task definition file"
+          }
+        },
+        "outputs": {
+          "status": { "type": "string", "description": "Pipeline execution status" },
+          "fitness": { "type": "object", "description": "Fitness vector scores" },
+          "misfolds": { "type": "array", "description": "Detected misfold events" },
+          "gate_decision": { "type": "string", "description": "Compounding gate decision" }
+        }
+      }
+    },
+    {
+      "type": "agentfold_health_snapshot",
+      "entryPoint": "./tools/health_snapshot.js",
+      "schema": {
+        "title": "Health Snapshot",
+        "description": "Run the AgentFold test suite, CLI help, genome validation example, and rehydration health checks. Returns a full health snapshot table.",
+        "category": "action",
+        "icon": "heart-pulse",
+        "parameters": {},
+        "outputs": {
+          "tests_passed": { "type": "integer", "description": "Number of tests passing" },
+          "cli_working": { "type": "boolean", "description": "Whether CLI is functional" },
+          "genome_validation": { "type": "string", "description": "Genome validation result" },
+          "health_table": { "type": "array", "description": "Health snapshot rows" },
+          "non_claim_lock": { "type": "string", "description": "Non-claim lock status" }
+        }
+      }
+    },
+    {
+      "type": "agentfold_check_misfolds",
+      "entryPoint": "./tools/check_misfolds.js",
+      "schema": {
+        "title": "Check Misfolds",
+        "description": "Run AgentFold CI policy verification against the policy file. Checks for structural drift: origin drift, claim overreach, evidence gaps, unsafe compounding.",
+        "category": "action",
+        "icon": "alert-triangle",
+        "parameters": {
+          "genome_path": {
+            "type": "string",
+            "description": "Optional genome path to check"
+          }
+        },
+        "outputs": {
+          "policy_valid": { "type": "boolean", "description": "Whether policy verification passed" },
+          "misfold_count": { "type": "integer", "description": "Number of misfolds detected" },
+          "details": { "type": "array", "description": "Misfold details" }
+        }
+      }
+    },
+    {
+      "type": "agentfold_ledger_verify",
+      "entryPoint": "./tools/ledger_verify.js",
+      "schema": {
+        "title": "Verify Ledger",
+        "description": "Verify AgentFold ledger continuity — checks hash chain integrity of the append-only JSONL ledger.",
+        "category": "action",
+        "icon": "link",
+        "parameters": {
+          "ledger_path": {
+            "type": "string",
+            "description": "Path to the ledger JSONL file"
+          }
+        },
+        "outputs": {
+          "valid": { "type": "boolean", "description": "Whether ledger hash chain is valid" },
+          "entries": { "type": "integer", "description": "Number of ledger entries" },
+          "broken_at": { "type": "integer", "description": "Index where chain is broken, if any" }
+        }
+      }
+    },
+    {
+      "type": "agentfold_fitness_score",
+      "entryPoint": "./tools/fitness_score.js",
+      "schema": {
+        "title": "Fitness Score",
+        "description": "Run the AgentFold fitness evaluator — scores multi-dimensional fitness (bounded, not overclaimed) from test results.",
+        "category": "action",
+        "icon": "bar-chart-2",
+        "parameters": {},
+        "outputs": {
+          "tests_passed": { "type": "integer", "description": "Tests passed" },
+          "tests_total": { "type": "integer", "description": "Total tests" },
+          "success_rate": { "type": "number", "description": "Success rate 0-1" }
+        }
+      }
+    },
+    {
+      "type": "agentfold_gate_evaluate",
+      "entryPoint": "./tools/gate_evaluate.js",
+      "schema": {
+        "title": "Evaluate Compounding Gate",
+        "description": "Run the AgentFold compounding gate decision — permits, warns, repairs, shadows, or blocks based on evidence replay and drift checks.",
+        "category": "action",
+        "icon": "git-branch",
+        "parameters": {
+          "genome_path": {
+            "type": "string",
+            "description": "Path to genome to evaluate"
+          }
+        },
+        "outputs": {
+          "decision": { "type": "string", "description": "Gate decision: permit/warn/repair/shadow/block" },
+          "reason": { "type": "string", "description": "Reason for decision" }
+        }
+      }
+    },
+    {
+      "type": "agentfold_rehydration_check",
+      "entryPoint": "./tools/rehydration_check.js",
+      "schema": {
+        "title": "Rehydration Check",
+        "description": "Run the AgentFold rehydration protocol — anchor, read, index, route, validate, inspect, plan, patch, test, ledger, boundary.",
+        "category": "action",
+        "icon": "refresh-cw",
+        "parameters": {},
+        "outputs": {
+          "steps_completed": { "type": "integer", "description": "Number of rehydration steps completed" },
+          "total_steps": { "type": "integer", "description": "Total steps in protocol" },
+          "status": { "type": "string", "description": "Overall rehydration status" }
+        }
+      }
+    },
+    {
+      "type": "agentfold_evidence_replay",
+      "entryPoint": "./tools/evidence_replay.js",
+      "schema": {
+        "title": "Evidence Replay",
+        "description": "Verify an AgentFold evidence packet against CI policy — replayable evidence validation.",
+        "category": "action",
+        "icon": "play-circle",
+        "parameters": {
+          "packet_path": {
+            "type": "string",
+            "description": "Path to evidence packet file"
+          }
+        },
+        "outputs": {
+          "valid": { "type": "boolean", "description": "Whether evidence packet is valid" },
+          "replay_result": { "type": "string", "description": "Replay result details" }
+        }
+      }
+    }
+  ]
+}
