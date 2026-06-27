@@ -1,0 +1,5 @@
+{
+  "name": "system-coherence-monitor",
+  "private": true,
+  "type": "module"
+}

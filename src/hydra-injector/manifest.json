@@ -1,0 +1,221 @@
+{
+  "name": "hydra-injector",
+  "version": "1.0.0",
+  "description": "Governed residual-field injection and agent codeweave toolkit. Runs anchor→inject→retract→seal operations, marker-bound code injection, robustness sweeps, and shadow-header archive gates.",
+  "author": "James Paul Jackson",
+  "icon": "water",
+  "tools": [
+    {
+      "type": "hydra-run",
+      "entryPoint": "./hydra-run.js",
+      "schema": {
+        "title": "HYDRA Run",
+        "category": "action",
+        "type": "hydra-run",
+        "icon": "water",
+        "description": "Run a HYDRA spec JSON file through the anchor→inject→retract→seal operator.",
+        "parameters": {
+          "specFile": {
+            "type": "string",
+            "inputType": "text",
+            "required": true,
+            "description": "Absolute path to the HYDRA spec JSON file",
+            "placeholder": "C:/path/to/spec.json"
+          },
+          "format": {
+            "type": "string",
+            "inputType": "select",
+            "options": ["json", "markdown"],
+            "default": "json",
+            "description": "Output format"
+          }
+        },
+        "outputs": {
+          "success": { "type": "boolean", "description": "Whether the run succeeded" },
+          "result": { "type": "object", "description": "Full HYDRA result with field, metrics, admissible, warnings" },
+          "report": { "type": "string", "description": "Formatted report (markdown or JSON string)" },
+          "error": { "type": "string", "description": "Error message if failed" }
+        }
+      }
+    },
+    {
+      "type": "hydra-demo",
+      "entryPoint": "./hydra-demo.js",
+      "schema": {
+        "title": "HYDRA Demo",
+        "category": "action",
+        "type": "hydra-demo",
+        "icon": "sparkles",
+        "description": "Run the bundled HYDRA demo spec to verify the operator pipeline.",
+        "parameters": {
+          "format": {
+            "type": "string",
+            "inputType": "select",
+            "options": ["json", "markdown"],
+            "default": "json",
+            "description": "Output format"
+          }
+        },
+        "outputs": {
+          "success": { "type": "boolean", "description": "Whether the demo succeeded" },
+          "result": { "type": "object", "description": "Demo result with metrics and field data" },
+          "error": { "type": "string", "description": "Error message if failed" }
+        }
+      }
+    },
+    {
+      "type": "hydra-scaffold",
+      "entryPoint": "./hydra-scaffold.js",
+      "schema": {
+        "title": "HYDRA Scaffold",
+        "category": "action",
+        "type": "hydra-scaffold",
+        "icon": "file",
+        "description": "Generate a starter HYDRA spec JSON template.",
+        "parameters": {
+          "size": {
+            "type": "number",
+            "inputType": "number",
+            "default": 7,
+            "minimum": 3,
+            "maximum": 64,
+            "description": "Grid size for the scaffolded field"
+          },
+          "outputPath": {
+            "type": "string",
+            "inputType": "text",
+            "description": "Optional path to write the spec file",
+            "placeholder": "C:/path/to/output_spec.json"
+          }
+        },
+        "outputs": {
+          "success": { "type": "boolean", "description": "Whether scaffolding succeeded" },
+          "spec": { "type": "object", "description": "The generated spec object" },
+          "path": { "type": "string", "description": "Path where spec was written (if outputPath provided)" },
+          "error": { "type": "string", "description": "Error message if failed" }
+        }
+      }
+    },
+    {
+      "type": "hydra-robustness",
+      "entryPoint": "./hydra-robustness.js",
+      "schema": {
+        "title": "HYDRA Robustness",
+        "category": "action",
+        "type": "hydra-robustness",
+        "icon": "chart",
+        "description": "Run perturbation robustness sweep on a HYDRA spec to check omega-basin stability.",
+        "parameters": {
+          "specFile": {
+            "type": "string",
+            "inputType": "text",
+            "required": true,
+            "description": "Absolute path to the HYDRA spec JSON file",
+            "placeholder": "C:/path/to/spec.json"
+          },
+          "trials": {
+            "type": "number",
+            "inputType": "number",
+            "default": 8,
+            "minimum": 1,
+            "maximum": 64,
+            "description": "Number of perturbation trials"
+          },
+          "noiseScale": {
+            "type": "number",
+            "inputType": "number",
+            "default": 0.03,
+            "minimum": 0.001,
+            "maximum": 1,
+            "description": "Gaussian noise scale for perturbations"
+          }
+        },
+        "outputs": {
+          "success": { "type": "boolean", "description": "Whether the sweep succeeded" },
+          "robustness": { "type": "object", "description": "Robustness metrics (omega_mean, omega_cv, omega_basin_robust)" },
+          "error": { "type": "string", "description": "Error message if failed" }
+        }
+      }
+    },
+    {
+      "type": "hydra-codeweave",
+      "entryPoint": "./hydra-codeweave.js",
+      "schema": {
+        "title": "HYDRA Codeweave",
+        "category": "action",
+        "type": "hydra-codeweave",
+        "icon": "code",
+        "description": "Plan, apply, verify, or rollback marker-bound code injections. Governed agent codeweave workflow.",
+        "parameters": {
+          "action": {
+            "type": "string",
+            "inputType": "select",
+            "options": ["plan", "apply-dry", "apply", "verify", "bundle", "rollback", "markers"],
+            "required": true,
+            "description": "Codeweave operation to perform"
+          },
+          "specFile": {
+            "type": "string",
+            "inputType": "text",
+            "description": "Path to code injection/bundle spec JSON (required for plan, apply, verify, bundle)",
+            "placeholder": "C:/path/to/code_spec.json",
+            "conditional": { "field": "action", "value": ["plan", "apply-dry", "apply", "verify", "bundle"] }
+          },
+          "targetDir": {
+            "type": "string",
+            "inputType": "text",
+            "description": "Directory to scan for markers (required for markers action)",
+            "placeholder": "C:/path/to/project",
+            "conditional": { "field": "action", "value": ["markers"] }
+          },
+          "sessionId": {
+            "type": "string",
+            "inputType": "text",
+            "description": "Session ID for rollback",
+            "conditional": { "field": "action", "value": ["rollback"] }
+          },
+          "format": {
+            "type": "string",
+            "inputType": "select",
+            "options": ["json", "markdown", "html", "report"],
+            "default": "json",
+            "description": "Output format for bundle reports"
+          }
+        },
+        "outputs": {
+          "success": { "type": "boolean", "description": "Whether the operation succeeded" },
+          "result": { "type": "object", "description": "Codeweave operation result" },
+          "report": { "type": "string", "description": "Formatted report (markdown/HTML)" },
+          "error": { "type": "string", "description": "Error message if failed" }
+        }
+      }
+    },
+    {
+      "type": "hydra-archive-gate",
+      "entryPoint": "./hydra-archive-gate.js",
+      "schema": {
+        "title": "HYDRA Archive Gate",
+        "category": "action",
+        "type": "hydra-archive-gate",
+        "icon": "lock",
+        "description": "Validate an artifact shadow-header against HYDRA governance requirements. Checks non-claim boundaries and drift risks.",
+        "parameters": {
+          "headerJson": {
+            "type": "string",
+            "inputType": "codearea",
+            "required": true,
+            "description": "The artifact header as JSON (must include title, version, author, status, artifact_class, claim_type, non_claims, etc.)"
+          }
+        },
+        "outputs": {
+          "success": { "type": "boolean", "description": "Whether validation succeeded" },
+          "archiveReady": { "type": "boolean", "description": "Whether the artifact passes the archive gate" },
+          "missingFields": { "type": "array", "description": "List of missing required header fields" },
+          "nonClaimLock": { "type": "boolean", "description": "Whether non-claims are properly stated" },
+          "actions": { "type": "array", "description": "Required actions before promotion" },
+          "error": { "type": "string", "description": "Error message if failed" }
+        }
+      }
+    }
+  ]
+}

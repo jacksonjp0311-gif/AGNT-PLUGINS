@@ -1,0 +1,38 @@
+{
+  "name": "system-coherence-monitor",
+  "displayName": "System Coherence Monitor",
+  "version": "1.0.1",
+  "description": "Autonomous AGNT ecosystem health monitor. Detects runaway workflows, error storms, credit anomalies, and system degradation. Self-aware observability layer.",
+  "author": "jacksonjp0311-gif",
+  "icon": "radar",
+  "license": "Apache-2.0",
+  "tools": [
+    {
+      "type": "scm-check-health",
+      "entryPoint": "./tools/check-health.js",
+      "schema": {
+        "title": "Check System Health",
+        "description": "Scans all workflows, executions, and agents for anomalies. Returns health report with coherence score 0-100.",
+        "category": "action",
+        "icon": "heart-pulse",
+        "parameters": {}
+      }
+    },
+    {
+      "type": "scm-report",
+      "entryPoint": "./tools/report.js",
+      "schema": {
+        "title": "Generate Coherence Report",
+        "description": "Produces a markdown coherence report with anomaly detection, credit analysis, and recommendations.",
+        "category": "action",
+        "icon": "file-chart",
+        "parameters": {
+          "outputPath": {
+            "type": "string",
+            "description": "Path to write the report file"
+          }
+        }
+      }
+    }
+  ]
+}

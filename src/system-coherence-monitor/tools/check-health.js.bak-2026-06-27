@@ -1,0 +1,194 @@
+import { execSync } from "child_process";
+import https from "https";
+import http from "http";
+
+class SCMCheckHealthTool {
+  constructor() {
+    this.name = "scm-check-health";
+  }
+
+  async execute(params) {
+    const token = process.env.AGNT_AUTH_TOKEN;
+    if (!token) {
+      return { error: "AGNT_AUTH_TOKEN not available" };
+    }
+
+    const API = "http://localhost:3333/api";
+
+    // Helper to call AGNT API
+    const apiCall = (endpoint, options = {}) => {
+      return new Promise((resolve, reject) => {
+        const url = new URL(API + endpoint);
+        const reqOptions = {
+          hostname: url.hostname,
+          port: url.port,
+          path: url.pathname + url.search,
+          method: options.method || "GET",
+          headers: {
+            Authorization: "Bearer " + token,
+            "Content-Type": "application/json",
+          },
+        };
+        const req = http.request(reqOptions, (res) => {
+          let data = "";
+          res.on("data", (chunk) => (data += chunk));
+          res.on("end", () => {
+            try {
+              resolve(JSON.parse(data));
+            } catch (e) {
+              resolve(null);
+            }
+          });
+        });
+        req.on("error", reject);
+        if (options.body) req.write(JSON.stringify(options.body));
+        req.end();
+      });
+    };
+
+    try {
+      // 1. Get all workflows
+      const workflowsResp = await apiCall("/workflows/");
+      const workflows = workflowsResp?.workflows || workflowsResp || [];
+
+      // 2. Get recent executions (last 50)
+      let recentExecs = [];
+      try {
+        const execsResp = await apiCall("/executions?limit=50");
+        recentExecs = Array.isArray(execsResp) ? execsResp : [];
+      } catch (e) {
+        // executions endpoint may not be available via direct API
+      }
+
+      // 3. Analyze workflow health
+      const workflowAnalysis = [];
+      let totalExecutions = 0;
+      let totalErrors = 0;
+      let totalCredits = 0;
+      const now = Date.now();
+      const fiveMinAgo = now - 5 * 60 * 1000;
+      const oneHourAgo = now - 60 * 60 * 1000;
+
+      // Analyze execution patterns per workflow
+      const execCounts = {};
+      const errorCounts = {};
+      const creditTotals = {};
+
+      for (const exec of recentExecs) {
+        const wfId = exec.workflowId;
+        execCounts[wfId] = (execCounts[wfId] || 0) + 1;
+        if (exec.status === "error") {
+          errorCounts[wfId] = (errorCounts[wfId] || 0) + 1;
+          totalErrors++;
+        }
+        const credits = exec.creditsUsed || 0;
+        creditTotals[wfId] = (creditTotals[wfId] || 0) + credits;
+        totalCredits += credits;
+        totalExecutions++;
+      }
+
+      // 4. Detect anomalies
+      const anomalies = [];
+
+      for (const wf of workflows) {
+        const wfId = wf.id;
+        const execCount = execCounts[wfId] || 0;
+        const errorCount = errorCounts[wfId] || 0;
+        const credits = creditTotals[wfId] || 0;
+        const errorRate = execCount > 0 ? errorCount / execCount : 0;
+
+        // Anomaly: high error rate
+        if (execCount > 3 && errorRate > 0.5) {
+          anomalies.push({
+            type: "ERROR_STORM",
+            severity: "critical",
+            workflow: wf.name,
+            workflowId: wfId,
+            message: `${(errorRate * 100).toFixed(0)}% error rate (${errorCount}/${execCount} executions)`,
+          });
+        }
+
+        // Anomaly: runaway execution frequency
+        if (execCount > 10) {
+          anomalies.push({
+            type: "RUNAWAY_EXECUTION",
+            severity: "high",
+            workflow: wf.name,
+            workflowId: wfId,
+            message: `${execCount} executions in recent window`,
+          });
+        }
+
+        // Anomaly: high credit burn
+        if (credits > 100) {
+          anomalies.push({
+            type: "CREDIT_SPIKE",
+            severity: "medium",
+            workflow: wf.name,
+            workflowId: wfId,
+            message: `${credits.toFixed(1)} credits consumed recently`,
+          });
+        }
+
+        workflowAnalysis.push({
+          name: wf.name,
+          id: wfId,
+          status: wf.status,
+          executions: execCount,
+          errors: errorCount,
+          errorRate: errorRate,
+          credits: credits,
+        });
+      }
+
+      // 5. Calculate coherence score
+      let coherenceScore = 100;
+      for (const a of anomalies) {
+        if (a.severity === "critical") coherenceScore -= 25;
+        else if (a.severity === "high") coherenceScore -= 15;
+        else if (a.severity === "medium") coherenceScore -= 5;
+      }
+      coherenceScore = Math.max(0, Math.min(100, coherenceScore));
+
+      // 6. System overview
+      const activeWorkflows = workflows.filter(
+        (w) => w.status === "listening" || w.status === "running"
+      ).length;
+      const stoppedWorkflows = workflows.filter(
+        (w) => w.status === "stopped"
+      ).length;
+      const inactiveWorkflows = workflows.filter(
+        (w) => w.status === "inactive"
+      ).length;
+
+      return {
+        status: "success",
+        timestamp: new Date().toISOString(),
+        coherence_score: coherenceScore,
+        system_overview: {
+          total_workflows: workflows.length,
+          active: activeWorkflows,
+          stopped: stoppedWorkflows,
+          inactive: inactiveWorkflows,
+          total_executions: totalExecutions,
+          total_errors: totalErrors,
+          total_credits: totalCredits,
+        },
+        anomalies: anomalies,
+        workflow_analysis: workflowAnalysis,
+        recommendations:
+          anomalies.length > 0
+            ? anomalies.map((a) => `[${a.severity}] ${a.workflow}: ${a.message}`)
+            : ["System healthy. No anomalies detected."],
+      };
+    } catch (err) {
+      return {
+        status: "error",
+        error: err.message,
+        timestamp: new Date().toISOString(),
+      };
+    }
+  }
+}
+
+export default new SCMCheckHealthTool();

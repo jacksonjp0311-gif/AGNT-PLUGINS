@@ -1,0 +1,91 @@
+{
+  "name": "neuralforge-smart-tool",
+  "version": "1.0.0",
+  "description": "NeuralForge-powered smart tool that learns from every execution. Predicts failures, optimizes parameters, and adapts to usage patterns.",
+  "author": "James Paul Jackson",
+  "icon": "brain",
+  "tools": [
+    {
+      "type": "nf-smart-predict",
+      "entryPoint": "./nf-smart-predict.js",
+      "schema": {
+        "title": "NF Smart Predict",
+        "category": "action",
+        "type": "nf-smart-predict",
+        "icon": "brain",
+        "description": "Predict whether a tool call will succeed based on learned patterns from past executions.",
+        "parameters": {
+          "toolName": { "type": "string", "inputType": "text", "required": true, "description": "Name of the tool to predict for" },
+          "contextLoad": { "type": "number", "inputType": "number", "default": 0.5, "minimum": 0, "maximum": 1, "description": "Current system load 0-1" },
+          "recentErrors": { "type": "number", "inputType": "number", "default": 0, "minimum": 0, "description": "Number of recent errors" }
+        },
+        "outputs": {
+          "success": { "type": "boolean" },
+          "prediction": { "type": "object", "description": "Failure probability, recommendation, confidence" }
+        }
+      }
+    },
+    {
+      "type": "nf-smart-optimize",
+      "entryPoint": "./nf-smart-optimize.js",
+      "schema": {
+        "title": "NF Smart Optimize",
+        "category": "action",
+        "type": "nf-smart-optimize",
+        "icon": "chart",
+        "description": "Get optimal parameters (timeout, retries, backoff) for a tool call based on learned patterns.",
+        "parameters": {
+          "toolName": { "type": "string", "inputType": "text", "required": true, "description": "Name of the tool to optimize for" },
+          "contextLoad": { "type": "number", "inputType": "number", "default": 0.5, "minimum": 0, "maximum": 1, "description": "Current system load 0-1" },
+          "dataSize": { "type": "number", "inputType": "number", "default": 1000, "minimum": 1, "description": "Size of data being processed" }
+        },
+        "outputs": {
+          "success": { "type": "boolean" },
+          "params": { "type": "object", "description": "Optimal timeout, retries, backoff" }
+        }
+      }
+    },
+    {
+      "type": "nf-smart-retry",
+      "entryPoint": "./nf-smart-retry.js",
+      "schema": {
+        "title": "NF Smart Retry",
+        "category": "action",
+        "type": "nf-smart-retry",
+        "icon": "refresh",
+        "description": "Decide whether to retry a failed tool call based on learned patterns.",
+        "parameters": {
+          "toolName": { "type": "string", "inputType": "text", "required": true, "description": "Name of the tool that failed" },
+          "errorType": { "type": "string", "inputType": "text", "required": true, "description": "Type of error encountered" },
+          "retryCount": { "type": "number", "inputType": "number", "default": 0, "minimum": 0, "description": "Current retry count" }
+        },
+        "outputs": {
+          "success": { "type": "boolean" },
+          "decision": { "type": "object", "description": "Should retry, confidence, reason" }
+        }
+      }
+    },
+    {
+      "type": "nf-smart-record",
+      "entryPoint": "./nf-smart-record.js",
+      "schema": {
+        "title": "NF Smart Record",
+        "category": "action",
+        "type": "nf-smart-record",
+        "icon": "save",
+        "description": "Record a tool execution result to improve future predictions.",
+        "parameters": {
+          "toolName": { "type": "string", "inputType": "text", "required": true, "description": "Name of the tool" },
+          "durationMs": { "type": "number", "inputType": "number", "required": true, "description": "Execution duration in ms" },
+          "success": { "type": "boolean", "inputType": "select", "options": ["true", "false"], "required": true, "description": "Whether the call succeeded" },
+          "errorType": { "type": "string", "inputType": "text", "description": "Error type if failed" }
+        },
+        "outputs": {
+          "success": { "type": "boolean" },
+          "recorded": { "type": "boolean" },
+          "totalRecords": { "type": "number" }
+        }
+      }
+    }
+  ]
+}
