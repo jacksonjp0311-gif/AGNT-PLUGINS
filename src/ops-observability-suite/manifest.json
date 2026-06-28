@@ -1,0 +1,103 @@
+{
+  "name": "ops-observability-suite",
+  "version": "1.0.0",
+  "description": "System-grade observability: workflowCompleted trigger + execution triage / failure clustering. Uses SQLite via Python stdlib (no Node deps).",
+  "author": "jacksonjp0311-gif / Annie",
+  "icon": "activity",
+  "tools": [
+    {
+      "type": "workflow-completed",
+      "entryPoint": "./workflow-completed-trigger.js",
+      "schema": {
+        "title": "Workflow Completed Trigger",
+        "category": "trigger",
+        "type": "workflow-completed",
+        "icon": "activity",
+        "description": "Triggers when a workflow execution completes (polls AGNT SQLite DB for new completed executions).",
+        "parameters": {
+          "pollIntervalSeconds": {
+            "type": "integer",
+            "title": "Poll Interval (sec)",
+            "description": "How often to check for newly completed workflow executions",
+            "default": 15
+          },
+          "statusFilter": {
+            "type": "string",
+            "title": "Status Filter",
+            "description": "Which workflow_executions.status values should trigger",
+            "options": [
+              { "value": "any", "label": "Any" },
+              { "value": "completed", "label": "completed" },
+              { "value": "error", "label": "error" },
+              { "value": "stopped", "label": "stopped" }
+            ],
+            "default": "any",
+            "inputType": "select"
+          },
+          "workflowNameContains": {
+            "type": "string",
+            "title": "Workflow name contains",
+            "description": "Optional substring filter applied to workflow_name",
+            "inputType": "text"
+          },
+          "checkpointMode": {
+            "type": "string",
+            "title": "Checkpoint Mode",
+            "description": "How to persist the last-seen marker",
+            "options": [
+              { "value": "file", "label": "File (plugin-data)" },
+              { "value": "memory", "label": "Memory (resets on restart)" }
+            ],
+            "default": "file",
+            "inputType": "select"
+          }
+        },
+        "outputs": {
+          "executionId": { "type": "string", "description": "workflow_executions.id" },
+          "workflowId": { "type": "string", "description": "workflow_executions.workflow_id" },
+          "workflowName": { "type": "string", "description": "workflow_executions.workflow_name" },
+          "status": { "type": "string", "description": "workflow_executions.status" },
+          "endTime": { "type": "string", "description": "workflow_executions.end_time" },
+          "creditsUsed": { "type": "number", "description": "workflow_executions.credits_used" },
+          "row": { "type": "object", "description": "Raw row" }
+        }
+      }
+    },
+    {
+      "type": "execution-triage",
+      "entryPoint": "./execution-triage.js",
+      "schema": {
+        "title": "Execution Triage / Failure Clusterer",
+        "category": "utility",
+        "type": "execution-triage",
+        "icon": "file-chart",
+        "description": "Clusters workflow/node failures from AGNT SQLite DB, produces ranked root causes and an action list (evidence-based).",
+        "parameters": {
+          "days": {
+            "type": "integer",
+            "title": "Days window",
+            "description": "How many days back to analyze",
+            "default": 7
+          },
+          "maxRows": {
+            "type": "integer",
+            "title": "Max node error rows",
+            "description": "Safety cap on error rows scanned",
+            "default": 5000
+          },
+          "topK": {
+            "type": "integer",
+            "title": "Top K clusters",
+            "description": "How many top clusters to return",
+            "default": 10
+          }
+        },
+        "outputs": {
+          "report": { "type": "string", "description": "Markdown triage report" },
+          "summary": { "type": "object", "description": "Key metrics" },
+          "clusters": { "type": "array", "description": "Failure clusters" }
+        }
+      }
+    }
+  ]
+}

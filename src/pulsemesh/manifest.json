@@ -1,0 +1,134 @@
+{
+  "name": "pulsemesh",
+  "displayName": "PulseMesh Telemetry Mesh",
+  "version": "1.0.0",
+  "description": "Local-first multi-source telemetry acquisition, fusion, anomaly detection, and gate decisions for AGNT agent workflows. 13+ providers, robust median/MAD normalization, self-contained HTML dashboards, baselines, history, and go/warn/hold gates.",
+  "author": "James Paul Jackson",
+  "icon": "PM",
+  "homepage": "https://github.com/jacksonjp0311-gif/PulseMesh",
+  "category": "observability",
+  "tags": ["telemetry", "observability", "agents", "sensorium", "anomaly-detection", "baselines", "dashboard", "local-first", "system-health", "network-health"],
+  "type": "module",
+  "main": "./pulsemesh-agnt.js",
+  "engines": { "node": ">=18.0.0" },
+  "tools": [
+    {
+      "type": "pulsemesh-demo",
+      "title": "PulseMesh Demo Workflow",
+      "description": "Run the full PulseMesh telemetry mesh: acquire all sensors, fuse, evaluate alerts, render dashboard + report, update baselines. Returns complete summary with gate decision.",
+      "entryPoint": "./pulsemesh-agnt.js",
+      "schema": {
+        "parameters": {
+          "profiles": { "type": "string", "description": "Path to profiles JSON file. Defaults to bundled AGNT profile." },
+          "out": { "type": "string", "default": "runs/pulsemesh", "description": "Output directory for run artifacts." },
+          "max_points": { "type": "number", "default": 256, "description": "Maximum samples per sensor." },
+          "timeout": { "type": "number", "default": 12, "description": "Provider timeout in seconds." },
+          "min_health": { "type": "number", "default": 0.55, "description": "Minimum mesh health for gate=go." },
+          "max_anomaly": { "type": "number", "default": 0.85, "description": "Maximum anomaly for gate=go." }
+        }
+      }
+    },
+    {
+      "type": "pulsemesh-acquire",
+      "title": "PulseMesh Acquire Sensor",
+      "description": "Acquire telemetry from a single sensor provider. Supports system, ping, goes_xray, openmeteo, openmeteo_air, usgs_earthquake, csv, jsonl, rss, github, synthetic.",
+      "entryPoint": "./pulsemesh-agnt.js",
+      "schema": {
+        "parameters": {
+          "provider": { "type": "string", "description": "Provider type (system, ping, goes_xray, openmeteo, etc.)." },
+          "id": { "type": "string", "description": "Sensor profile ID." },
+          "label": { "type": "string", "description": "Human-readable label." },
+          "variable": { "type": "string", "description": "Variable to measure (for system provider: cpu_load, memory_used_percent, disk_free_percent, etc.)." },
+          "host": { "type": "string", "description": "Host for ping provider." },
+          "port": { "type": "number", "description": "Port for ping provider." },
+          "lat": { "type": "number", "description": "Latitude for weather providers." },
+          "lon": { "type": "number", "description": "Longitude for weather providers." },
+          "max_points": { "type": "number", "default": 64, "description": "Maximum data points." },
+          "timeout": { "type": "number", "default": 12, "description": "Timeout in seconds." }
+        }
+      }
+    },
+    {
+      "type": "pulsemesh-fuse",
+      "title": "PulseMesh Fusion Analysis",
+      "description": "Run fusion analysis on acquired telemetry data. Computes health_score, anomaly_score, coherence, volatility, drift, spike_count.",
+      "entryPoint": "./pulsemesh-agnt.js",
+      "schema": {
+        "parameters": {
+          "values": { "type": "string", "description": "JSON array of numeric values to analyze." },
+          "label": { "type": "string", "default": "analysis", "description": "Label for this analysis." },
+          "stability_threshold": { "type": "number", "default": 0.7, "description": "Coherence threshold for stability." }
+        }
+      }
+    },
+    {
+      "type": "pulsemesh-status",
+      "title": "PulseMesh Status",
+      "description": "Get the latest mesh health, alerts, fallback count, and highest anomaly from the most recent run.",
+      "entryPoint": "./pulsemesh-agnt.js",
+      "schema": {
+        "parameters": {
+          "out": { "type": "string", "default": "runs/pulsemesh", "description": "Runs directory to read from." }
+        }
+      }
+    },
+    {
+      "type": "pulsemesh-gate",
+      "title": "PulseMesh Gate Decision",
+      "description": "Return go/warn/hold decision before agent proceeds. Evaluates mesh health and anomaly thresholds.",
+      "entryPoint": "./pulsemesh-agnt.js",
+      "schema": {
+        "parameters": {
+          "out": { "type": "string", "default": "runs/pulsemesh", "description": "Runs directory to read." },
+          "min_health": { "type": "number", "default": 0.55, "description": "Minimum mesh health for go." },
+          "max_anomaly": { "type": "number", "default": 0.85, "description": "Maximum anomaly for go." },
+          "warn_health": { "type": "number", "default": 0.72, "description": "Warning threshold for mesh health." },
+          "warn_anomaly": { "type": "number", "default": 0.65, "description": "Warning threshold for anomaly." }
+        }
+      }
+    },
+    {
+      "type": "pulsemesh-dashboard",
+      "title": "PulseMesh Dashboard",
+      "description": "Render a self-contained HTML dashboard from the latest run summary. Includes SVG sparklines, health coloring, alerts panel.",
+      "entryPoint": "./pulsemesh-agnt.js",
+      "schema": {
+        "parameters": {
+          "out": { "type": "string", "default": "runs/pulsemesh", "description": "Runs directory." },
+          "summary_path": { "type": "string", "description": "Explicit path to summary.json (optional)." }
+        }
+      }
+    },
+    {
+      "type": "pulsemesh-compare",
+      "title": "PulseMesh Compare Runs",
+      "description": "Compare two run summaries. Shows health_delta, anomaly_delta, coherence_delta per sensor.",
+      "entryPoint": "./pulsemesh-agnt.js",
+      "schema": {
+        "parameters": {
+          "before": { "type": "string", "description": "Path to before summary.json." },
+          "after": { "type": "string", "description": "Path to after summary.json." }
+        }
+      }
+    },
+    {
+      "type": "pulsemesh-providers",
+      "title": "PulseMesh Providers",
+      "description": "List all available telemetry providers with their capabilities and required parameters.",
+      "entryPoint": "./pulsemesh-agnt.js",
+      "schema": { "parameters": {} }
+    },
+    {
+      "type": "pulsemesh-sync",
+      "title": "PulseMesh Sync to AGNT",
+      "description": "Sync collected telemetry into AGNT observability. Updates baselines, summarizes history, and returns a gate decision for agent workflows.",
+      "entryPoint": "./pulsemesh-agnt.js",
+      "schema": {
+        "parameters": {
+          "out": { "type": "string", "default": "runs/pulsemesh", "description": "Runs directory." },
+          "history_limit": { "type": "number", "default": 20, "description": "Number of runs to include in history summary." }
+        }
+      }
+    }
+  ]
+}
